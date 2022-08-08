@@ -38,4 +38,21 @@ class DBHelper {
     return await _db?.insert(_tableName, task!.toJson())??1;
   }
 
+  static Future<List<Map<String, dynamic>>> query() async{
+    print("appel de la fonction query");
+    return await _db!.query(_tableName);
+  }
+
+  static delete(Task task) async {
+    return await _db!.delete(_tableName, where: 'id=?', whereArgs: [task.id]);
+  }
+
+  static update(int id)async{
+    return await _db!.rawUpdate('''
+      UPDATE tasks
+      SET isCompleted = ?
+      WHERE id =?
+    ''',[1, id]);
+  }
+
 }

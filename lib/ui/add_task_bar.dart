@@ -36,7 +36,7 @@ class _AddTAskPAgeState extends State<AddTAskPAge> {
   String _selectedRepeat = "Jamais";
   List<String> repeatList=[
     "Jamais",
-    "Jouranalier",
+    "Journalier",
     "Hebdomadaire",
     "Mensuel",
   ];
@@ -139,7 +139,7 @@ class _AddTAskPAgeState extends State<AddTAskPAge> {
                   underline: Container(height: 0,),
                   items: repeatList.map<DropdownMenuItem<String>>((String value){
                     return DropdownMenuItem<String>(
-                      child: Text(value!, style: TextStyle(color: Colors.grey),),
+                      child: Text(value, style: TextStyle(color: Colors.grey),),
                       value: value,
                     );
                   }).toList(),
@@ -158,7 +158,14 @@ class _AddTAskPAgeState extends State<AddTAskPAge> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   _colorPriority(),
-                  Mybutton(label: "Creer la tache", onTap: ()=>_validateData()),
+                  Mybutton(
+                      label: "Creer la tache",
+                      onTap: (){
+
+                        _validateData();
+                        _taskController.getTasks();
+                      }
+                  ),
                 ],
               )
 
@@ -170,8 +177,7 @@ class _AddTAskPAgeState extends State<AddTAskPAge> {
   }
 
   _addTaskToDb() async {
-
-  int value =  await _taskController.addTask(
+  int value =await _taskController.addTask(
        task: Task(
          note: _noteController.text,
          title:_titleController.text,
@@ -184,13 +190,14 @@ class _AddTAskPAgeState extends State<AddTAskPAge> {
          isCompleted:0,
        )
    );
-  print("mon id est "+"$value");
+  print("mon id est " + "$value");
   }
 
   _validateData() {
     if (_titleController.text.isNotEmpty&&_noteController.text.isNotEmpty) {
       //ajouter a la bd
       _addTaskToDb();
+      print("ajoute a la bd");
       Get.back();
     }else if(_titleController.text.isEmpty || _noteController.text.isEmpty){
       Get.snackbar("Erreur", " Veuillez remplir tous les champ",
